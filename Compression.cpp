@@ -171,6 +171,31 @@ bool equalTriple(FIRST_LEVEL_TRIPLE triple1, FIRST_LEVEL_TRIPLE triple2)
     return false;
 }
 
+int parseLine(char* line) {
+    // This assumes that a digit will be found and the line ends in " Kb".
+    int i = strlen(line);
+    const char* p = line;
+    while (*p <'0' || *p > '9') p++;
+    line[i-3] = '\0';
+    i = atoi(p);
+    return i;
+}
+
+int physicalMemoryUsed(){ //Note: this value is in KB!
+    FILE* file = fopen("/proc/self/status", "r");
+    int result = -1;
+    char line[128];
+
+    while (fgets(line, 128, file) != NULL){
+        if (strncmp(line, "VmRSS:", 6) == 0){
+            result = parseLine(line);
+            break;
+        }
+    }
+    fclose(file);
+    return result;
+}
+
 vector<FIRST_LEVEL_TRIPLE> firstLevelMatching(string refSeq, string tarSeq)
 {
     vector<FIRST_LEVEL_TRIPLE> triples;
@@ -273,6 +298,7 @@ vector<FIRST_LEVEL_TRIPLE> firstLevelMatching(string refSeq, string tarSeq)
             triples.at(i).mismatch = tarSeqCopy.substr(triples.at(i).tarIndex + triples.at(i).length, l);
         }
     }
+    cout << "Utrošak fizičke memorije: " << physicalMemoryUsed() << " KB" << endl;
     delete[] H;
     delete[] L;
     return triples;
@@ -357,31 +383,6 @@ vector<SECOND_LEVEL_STRUCT> secondLevelMatching(vector<FIRST_LEVEL_STRUCT> first
     }
 
     return secondLevel;
-}
-
-int parseLine(char* line) {
-    // This assumes that a digit will be found and the line ends in " Kb".
-    int i = strlen(line);
-    const char* p = line;
-    while (*p <'0' || *p > '9') p++;
-    line[i-3] = '\0';
-    i = atoi(p);
-    return i;
-}
-
-int physicalMemoryUsed(){ //Note: this value is in KB!
-    FILE* file = fopen("/proc/self/status", "r");
-    int result = -1;
-    char line[128];
-
-    while (fgets(line, 128, file) != NULL){
-        if (strncmp(line, "VmRSS:", 6) == 0){
-            result = parseLine(line);
-            break;
-        }
-    }
-    fclose(file);
-    return result;
 }
 
 int main(int argc, char *argv[])
@@ -504,7 +505,6 @@ int main(int argc, char *argv[])
     auto duration = duration_cast<seconds>(stop - start);
  
     cout << "Vrijeme kompresije: " << duration.count() << " s" << endl;
-    cout << "Utrošak fizičke memorije: " << physicalMemoryUsed() << " KB" << endl;
 
     return 0;
 }
