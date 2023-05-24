@@ -1,4 +1,6 @@
 #include "Compression.h"
+#include <chrono>
+using namespace std::chrono;
 
 int lineWidth;
 
@@ -62,6 +64,8 @@ void restoreSeq(string *tarSeq, TAR_INFO tarInfo) {
 
 int main(int argc, char *argv[])
 {
+    auto start = high_resolution_clock::now();
+
     string strRefName;
     string zipFile;
 
@@ -249,6 +253,12 @@ int main(int argc, char *argv[])
         }
         MyFile << tarSeq;
     }
+
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<milliseconds>(stop - start);
+ 
+    cout << "Vrijeme dekompresije: " << duration.count() << " ms" << endl;
 
     return 0;
 }
