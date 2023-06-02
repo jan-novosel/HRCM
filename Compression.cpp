@@ -306,8 +306,6 @@ vector<FIRST_LEVEL_TRIPLE> firstLevelMatching(string refSeq, string tarSeq)
 
 vector<SECOND_LEVEL_STRUCT> secondLevelMatching(vector<FIRST_LEVEL_STRUCT> firstLevel)
 {
-    FIRST_LEVEL_TRIPLE emptyTriple;
-
     int **H = new int *[firstLevel.size() - 1];
     for (int i = 0; i < firstLevel.size() - 1; ++i)
     {
@@ -502,9 +500,9 @@ int main(int argc, char *argv[])
 
     auto stop = high_resolution_clock::now();
 
-    auto duration = duration_cast<seconds>(stop - start);
+    auto duration = duration_cast<milliseconds>(stop - start);
  
-    cout << "Vrijeme kompresije: " << duration.count() << " s" << endl;
+    cout << "Vrijeme kompresije: " << duration.count() << " ms" << endl;
 
     return 0;
 }
