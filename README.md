@@ -13,5 +13,4 @@ The HRCM algorithm is tailored for **FASTA format** genomic sequences and consis
 3. Second-level compression
 
 ---
-
 This project was developed for the **Bioinformatics 1** course at the **Fakultet elektrotehnike i računarstva, Sveučilište u Zagrebu**.
